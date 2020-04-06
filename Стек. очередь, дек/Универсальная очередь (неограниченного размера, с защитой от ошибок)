@@ -1,0 +1,78 @@
+#include <iostream>
+#include <stdio.h>
+#include <math.h>
+#include <string>
+using namespace std;
+struct queue
+  {
+    int storage[100000];
+    int start;
+    int finish;
+    queue()
+      {
+      start=0;
+      finish=0;
+      }
+    void push(int n)
+      {
+      storage[finish]=n;
+      finish++;
+      cout<<"ok"<<endl;
+      }
+    int pop()
+      {
+      int a=storage[start];
+      start++;
+      return a;
+      }
+    int front()
+      {
+      return storage[start];
+      }
+    int size()
+      {
+      return finish - start;
+      }
+    string clear()
+      {
+      finish = 0;
+      start = 0;
+      return "ok";
+      }
+    string exit()
+      {
+      return "bye";
+      }
+};
+int main()
+{
+  string s;
+  queue x;
+  while(cin>>s)
+    {
+    if(s=="push")
+      {
+      int n;
+      cin>>n;
+      x.push(n);
+      }
+    if(s=="pop")
+      {
+      if (x.size()==0) cout<<"error"<<endl;
+      else cout<<x.pop()<<endl;
+      }
+    if(s=="front")
+      {
+      if (x.size()==0) cout<<"error"<<endl;
+      else cout<<x.front()<<endl;
+      }
+    if(s=="size") cout<<x.size()<<endl;
+    if(s=="clear") cout<<x.clear()<<endl;
+    if(s=="exit")
+      {
+      cout<<x.exit()<<endl;
+      return 0;
+      }
+    }
+return 0;
+}
