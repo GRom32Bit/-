@@ -1,0 +1,13 @@
+void dfs(tree* t) //Вывод развилок.
+{
+if (t->l) dfs(t->l);
+if ((t->r)&&(t->l)) printf("%d\n",t->x);
+if (t->r) dfs(t->r);
+}
+
+void dfs(tree* t) //Вывод веток.
+{
+if (t->l) dfs(t->l);
+if ((t->r!=0)^(t->l!=0)) printf("%d\n",t->x);
+if (t->r) dfs(t->r);
+}
