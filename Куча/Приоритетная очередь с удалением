@@ -1,0 +1,146 @@
+#include <stdio.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <math.h>
+const int N = 1e5+3;
+struct Heap 
+{
+private:
+    int _size;
+    int val[N];
+public:
+    Heap() {_size=0;}
+    int add(int x)
+	{
+        val[_size]=x;
+        _size++;
+        return sift_up(size()-1);
+    }
+    int sift_up(int pos)
+	{
+        if (!pos) return 0;
+        int p=(pos-1)/2;
+        if (val[p]<val[pos])
+		{
+            std::swap(val[p],val[pos]);
+            return sift_up(p);
+        }
+        return pos;
+    }
+    int sift_down(int pos)
+	{
+        int ch1=2*pos+1;
+        int ch2=2*pos+2;
+        if (ch1<_size)
+		{
+            if (ch2<_size)
+			{
+                if (val[ch1]>val[pos]&&val[ch1]>=val[ch2])
+				{
+                    std::swap(val[ch1], val[pos]);
+                    return sift_down(ch1);
+                }
+                else if (val[ch2]>val[pos]&&val[ch2]>=val[ch1])
+				{
+                    std::swap(val[ch2], val[pos]);
+                    return sift_down(ch2);
+                }
+            }
+            else if (val[ch1]>val[pos])
+			{
+                std::swap(val[ch1],val[pos]);
+                return sift_down(ch1);
+            }
+        }
+        return pos;
+    }
+    int get_max() {return val[0];}
+    int extract_max()
+	{
+        val[0]=val[size()-1];
+        _size--;
+        return sift_down(0);
+    }
+    void print()
+	{
+        for (int i=0;i<size();i++) std::cout<<val[i]<<' ';
+    }
+    int size() {return _size;}
+    int remove(int index)
+		{
+    	int res=val[index];
+        val[index]=val[size()-1];
+        _size--;
+        if (val[index]>res) sift_up(index);
+        else sift_down(index);
+        return res;
+    }
+};
+struct PriorityQueue 
+{
+private:
+    Heap heap;
+    int cap;
+public:
+    PriorityQueue() {cap= 0;}
+    PriorityQueue(int x) {cap= x;}
+    int enqueue(int x)
+	{
+        if (heap.size()==cap) return -1;
+        return heap.add(x);
+    }
+    std::pair<int, int> dequeue()
+	{
+        if (!heap.size()) return std::make_pair(-1,-1);
+        int mx=heap.get_max();
+        int index=heap.extract_max();
+        if (!heap.size()) index=-2;
+        return std::make_pair(index,mx);
+    }
+    void print() {heap.print();}
+    int remove(int index)
+	{
+        if (index-1>=heap.size()||!index) 
+            return -1;
+        return heap.remove(index-1);
+    }
+};
+PriorityQueue queue;
+int n,m,i,type,x,res;
+std::pair<int, int> mx;
+int main()
+{
+    std::cin>>n>>m;
+    queue=PriorityQueue(n);
+	for (i=0;i<m;i++)
+	{
+	std::cin>>type;
+	if (type==1)
+		{
+            mx=queue.dequeue();
+            if (mx.first==-1) std::cout<<-1<<std::endl;
+            else 
+			{
+                if (mx.first==-2) mx.first=0;
+                else mx.first++;        
+                std::cout<<mx.first<<' '<<mx.second<<std::endl;
+            }
+        } 
+    else if (type == 2)
+		{
+        	std::cin >> x;
+        	res = queue.enqueue(x);
+    		if (res != -1) res++;
+    		std::cout<<res<<std::endl;
+        }
+        else
+		{
+        std::cin>>x;
+        res = queue.remove(x);
+        std::cout<<res<<std::endl;
+        }
+	}
+	queue.print();
+}
