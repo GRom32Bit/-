@@ -11,3 +11,11 @@ if (t->l) dfs(t->l);
 if ((t->r!=0)^(t->l!=0)) printf("%d\n",t->x);
 if (t->r) dfs(t->r);
 }
+
+void dfs(tree* t) //Вывод листьев.
+{
+if (t == NULL) return;
+dfs(t->l);
+if((t->l== NULL) && (t->r==NULL)) printf("%d \n",t->x);
+dfs(t->r);
+}
