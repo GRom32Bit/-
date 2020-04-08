@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <math.h>
+const int N = 1e5+3;
+struct Heap 
+{
+private:
+    int _size;
+    int val[N];
+public:
+    Heap() {_size=0;}
+    void add(int x)
+	{
+        val[_size]=x;
+        _size++;
+    }
+    int sift_down(int pos)
+	{
+        int ch1=2*pos+1;
+        int ch2=2*pos+2;
+        if (ch1<_size)
+		{
+            if (ch2<_size)
+			{
+                if (val[ch1]>val[pos]&&val[ch1]>=val[ch2])
+				{
+                    std::swap(val[ch1], val[pos]);
+                    return sift_down(ch1);
+                }
+                else if (val[ch2]>val[pos]&&val[ch2]>=val[ch1])
+				{
+                    std::swap(val[ch2], val[pos]);
+                    return sift_down(ch2);
+                }
+            }
+            else if (val[ch1]>val[pos])
+			{
+                std::swap(val[ch1],val[pos]);
+                return sift_down(ch1);
+            }
+        }
+        return pos;
+    }
+    int get_max() {return val[0];}
+    int extract_max()
+	{
+        val[0]=val[size()-1];
+        _size--;
+        return sift_down(0);
+    }
+    void print()
+	{
+        for (int i=0;i<size();i++) std::cout<<val[i]<<' ';
+    }
+    int size() {return _size;}
+    void build_down()
+	{
+        for (int i=size()/2-1;i>=0;i--) sift_down(i);
+    }
+};
+Heap heap;
+int n,x;
+int main()
+{
+    std::cin >> n;
+        for (int i = 0; i < n; i++)
+		{
+            std::cin >> x;
+            heap.add(x);
+        }
+    heap.build_down();
+    heap.print();
+}
