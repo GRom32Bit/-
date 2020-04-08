@@ -1,0 +1,57 @@
+#include <iostream>
+#include <stdio.h>
+#include <math.h>
+#include <vector>
+using namespace std;
+struct tree
+{
+int h,x;
+tree *l, *r;
+tree (int key)
+	{
+	x=key;
+	h=1;
+	l=r=0;
+	}
+};
+int x;
+vector<int> hate;
+void add(tree* &t,int x)
+{
+	if (t==0) t=new tree(x);
+	else
+		if (t->x > x) add(t->l, x);
+		else add(t->r, x);
+	t->h=max(t->l ? t->l->h : 0,t->r ? t->r->h : 0)+1;
+}
+void dfs(tree* t)
+{
+if (t->l) dfs(t->l);
+hate.push_back(abs((t->l ? t->l->h : 0)-(t->r ? t->r->h : 0)));
+if (t->r) dfs(t->r);
+}
+int find(tree* t, int x)
+{
+	if (t==0) return 0;
+	if (t->x == x) return 1;
+	if (t->x > x) return find(t->l, x);
+	return find(t->r, x);
+}
+int main()
+{
+	tree* t=0;
+	int k=0;
+	while (1)
+	{
+	scanf("%d",&x);
+	if (!x) break;
+	if (!find(t, x)) add(t, x);
+	k++;
+	}
+	if (k!=0)
+	{
+	dfs(t);
+	for (int i=0;i<hate.size();i++) if (hate[i]>1) {cout<<"NO"; return 0;}
+	}
+	cout<<"YES";
+}
