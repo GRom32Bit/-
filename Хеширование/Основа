@@ -1,0 +1,60 @@
+//По инструкции.
+#include <stdio.h>
+#include <math.h>
+#include <iostream>
+using namespace std;
+struct node
+{
+    struct node *next=NULL;
+    char s[10];
+};
+int tableSize = 1e4;
+node** HashTable=new node*[tableSize];
+bool find(int val, string s) 
+{
+    bool f=false;
+    node* tmp=HashTable[val%tableSize];
+    while ((tmp!=NULL) && (!f))
+	{
+        if (tmp->s==s) f=true;
+        tmp=tmp->next;
+    }
+    return f;
+}
+void ins(int val, string s)
+{
+
+    node *tmp, *newN;
+    newN=new node[1];
+    int idx=val%tableSize,i;
+    tmp=HashTable[idx];
+    HashTable[idx]=newN;
+    newN->next=tmp;
+    for (i=0;i<s.size();i++) newN->s[i]=s[i];
+}
+int main()
+{
+    bool* log=new bool[2000000];
+    int idx=0,i;
+    while (true)
+	{
+        char e;
+		cin>>e;
+        if (e=='#') break;
+        string s;
+		cin>>s;
+		int val=0,len; 
+        if (s.size()<10) len=s.size();
+        else len=10;
+        for (i=0;i<len;i++) val+=s[i];
+        if (e=='+') ins(val,s);
+        else
+		{
+            log[idx]=find(val,s);
+            idx++;
+        }
+    }
+    for (i=0;i<idx;i++)
+        if (log[i]) cout<<"YES"<<endl;
+        else cout<<"NO"<<endl;
+}
