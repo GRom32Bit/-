@@ -1,0 +1,78 @@
+//В начало строя! Слияние, разделение и счёт не меняются, а GetS и обновление меняются, когда sum в структуре меняется на min.
+#include <iostream>
+#include <stdio.h>
+#include <math.h>
+#include <cstdlib>
+using namespace std;
+bool f;
+struct treap
+{
+	int cnt,val,prior,sum;
+	treap*l, *r;
+	treap(int prior, int val):cnt(0),val(val),prior(prior),sum(0),l(),r(){}
+};
+typedef treap* Ptr;
+Ptr Tree,Ta,Tb,Tc;
+int cnt(Ptr t)
+{
+	return t ? t->cnt : 0;
+}
+int GetS(Ptr t)
+{
+	if (t) return t->sum;
+	return 0;
+}
+void update(Ptr t)
+{
+	if (t)
+	{
+		t->cnt=1+cnt(t->l)+cnt(t->r);
+		t->sum=t->val+GetS(t->l)+GetS(t->r);
+	}
+}
+void merch(Ptr l, Ptr r, Ptr &t)
+{
+	if (!l || !r) t=l ? l : r;
+	else if (l->prior>r->prior) merch(l->r,r,l->r), t=l;
+	else merch(l, r->l, r->l), t = r;
+	update(t);
+}
+void split(Ptr t, Ptr &l, Ptr &r, int pos)
+{
+	if (!t) return void(l =r=0);
+	if (pos<=cnt(t->l)) split(t->l,l,t->l, pos), r=t;
+	else split(t->r,t->r,r,pos-1-cnt(t->l)), l=t;
+	update(t);
+}
+void ins(Ptr &t, Ptr it, int pos)
+{
+  Ptr t1,t2;
+  split(t,t1,t2,pos);
+  merch(t1,it,t1);
+  merch(t1,t2,t);
+}
+void print(Ptr t)
+{
+	if (!t)  return;
+	print(t->l);
+	if (f) cout<<" ";
+	cout<<t->val;
+	f=1;
+	print(t->r);
+}
+int main()
+{
+	int n,m,i;
+	cin>>n>>m;
+	for (i=0;i<n;i++) ins(Tree,new treap(rand(),i+1),i);
+	for (i=0;i<m;i++)
+	{
+		int l,r;
+		cin>>l>>r;
+		split(Tree,Tb,Tc,r);
+		split(Tb,Ta,Tb,l-1);
+		merch(Tb,Ta,Tree);
+		merch(Tree,Tc,Tree);
+	}
+	print(Tree);
+}
