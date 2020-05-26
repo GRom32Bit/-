@@ -1,0 +1,39 @@
+//Структура, вставка и поиск те же.
+void del(int val, string sd)
+{
+	node *tmp,*newN;
+    int idx=val%tableSize;
+    tmp=0;
+    newN=HashTable[idx];
+	while (newN && (string(newN->s)!= sd))
+	{
+		tmp=newN;
+		newN=newN->next;
+	}
+	if (!newN) return;
+	if (tmp) tmp->next=newN->next;
+	else HashTable[idx]=newN->next;
+}
+int main() //Основное отличие, собственно, в доп.условии.
+{
+    bool* log=new bool[1000000];
+    int idx = 0,i;
+    while (true)
+	{
+        char c;
+        string s;
+		cin>>c;
+        if (c=='#') break;
+		cin>>s;
+		int val=0,len; 
+        if (s.size()<10) len=s.size();
+        else len=10;
+        for (i=0;i<len;i++) val+=s[i];
+        if (c=='+') ins(val, s);
+        else if (c=='?') {log[idx] = find(val, s); idx++;}
+        else del(val,s);
+    }
+    for (i=0;i<idx; i++)
+        if (log[i]) cout<<"YES"<<endl;
+        else cout<<"NO"<<endl;
+}
