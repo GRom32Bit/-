@@ -1,0 +1,51 @@
+//Так себе он вяжется к хэшированием...
+#include <iostream>
+#include <map>
+#include <stdio.h>
+#include <math.h>
+#include <iomanip>
+using namespace std;
+int main()
+{
+	map<long, long> num;
+	long n,i;
+	cin>>n;
+	auto insval=[&num](long number,long count)
+		{
+		if (num.find(number)==num.end()) num.insert(make_pair(number, count));
+    	else num.find(number)->second+=count;
+		};
+	for (i=0;i<n;i++)
+		{
+    	long number;
+    	cin>>number;
+    	insval(number,1);
+		}
+	double cost=0;
+	while (true) 
+		{
+    	if ((num.size()<2)&&(num.begin()->second<2)) break;
+    	auto it_first=num.begin();
+    	long firval=it_first->first;
+    	if (it_first->second>1)
+			{
+    		long count=it_first->second/2;
+    		it_first->second%=2;
+    		insval(firval*2,count);
+    		cost+=firval*count*2;
+    		if (it_first->second==0) num.erase(it_first);
+    		continue;
+			}
+    	if (num.size()>1)
+			{
+    		auto it_second=next(it_first);
+    		long secval=it_second->first;
+    		cost+=firval+secval;
+    		it_second->second--;
+    		if (it_second->second==0) num.erase(it_first, next(it_second));
+    		else num.erase(it_first);
+    		insval(firval+secval,1);
+    		}
+		}
+	cout<<setprecision(2)<<fixed<<cost*0.05;
+}
