@@ -1,0 +1,41 @@
+//Технически это не структура. Три массива. Заполнили первично, изменили по ифу - выдали третий).
+void unit(int x, int y, int w)
+{
+    x=find(x);
+    y=find(y);
+    if (Rank[x]<Rank[y]) swap(x,y);
+    parent[y]=x;
+    Rank[x]+=w;
+    if (x!=y) Rank[x] += Rank[y];
+}
+int getr(int x)
+{
+    x=find(x);
+    return Rank[x];
+}
+int main()
+{
+    int n,m,i,x,y,w,num;
+	cin>>n>>m;
+    parent=new int[n];
+    Rank=new int[n];
+    int* log=new int[m];
+    int ind=0;
+    for (i=0;i<n;i++) {parent[i]=i; Rank[i]=0;}
+    for (i=0;i<m;i++)
+	{
+        cin>>num;
+        if (num==1)
+		{
+            cin>>x>>y>>w;
+            unit(x-1,y-1,w);
+        }
+        else
+		{
+            cin>>x;
+            log[ind]=getr(x-1);
+            ind++;
+        }
+    }
+    for (i=0;i<ind;i++) cout<<log[i]<<endl;
+}
