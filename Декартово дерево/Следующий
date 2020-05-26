@@ -1,0 +1,36 @@
+//Единственная задача, которую я решал давно. Год назад. И она - единственная, решение которой "в лоб" вписывается по времени.
+#include <iostream>
+#include <stdio.h>
+#include <math.h>
+#include <string>
+#include <set>
+#include <algorithm>
+using namespace std;
+struct stack
+{
+	set <long long> a;
+	void add(long long n) {a.insert(n);}
+	long long next(long long n) {return ((a.lower_bound(n)!=a.end())? (*a.lower_bound(n)):-1);}
+};
+int main()
+{
+	stack a;
+	char c,c1=' ';
+	long long n,x,i,y;
+	cin>>x;
+	for (i=0;i<x;i++)
+	{
+	cin>>c>>n;
+	if (c=='?')
+		{
+		cout<<a.next(n)<<'\n';
+		y=a.next(n);
+		}
+	else
+		{
+		if ((c1==' ')||(c1=='+')) a.add(n);
+		else a.add((n+y)%1000000000);
+		}
+	c1=c;
+	}
+}
