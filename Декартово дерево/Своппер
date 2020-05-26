@@ -1,0 +1,56 @@
+// В принципе структура та же, основные функции - аналогично.  
+long long Sum(int L, int R) //Суммирование чисел на отрезке [a;b].
+{
+  if (L > R) return 0;
+  int L1=(L+1)/2,R1=R/2;
+  int L2=L/2,R2=(R+1)/2-1;
+  Ptr A1, B1, C1, A2, B2, C2;
+  split(Ta,A1,B1,L1); //Очень долго пришлось сначала свыкаться с мыслью, что ТАК много всего разделять и сливать...
+  split(B1,B1,C1,R1-L1+1);
+  split(Tb,A2,B2,L2);
+  split(B2,B2,C2,R2-L2+1);
+  long long res=GetS(B1)+GetS(B2);
+  merch(A1,B1,B1);
+  merch(B1,C1,Ta);
+  merch(A2,B2,B2);
+  merch(B2,C2,Tb);
+  return res;
+}
+void Swap(int L, int R) //Подпрограмма, реализующая операцию "Взять отрезок чётной длины [x;y], поменять местами x с x+1, x+2 с x+3, и т.д."
+{
+  int L1 = (L + 1) / 2, R1 = R / 2;
+  int L2 = L / 2, R2 = (R + 1) / 2 - 1;
+  Ptr A1, B1, C1, A2, B2, C2;
+  split(Ta,A1,B1,L1);
+  split(B1,B1,C1,R1-L1+1);
+  split(Tb,A2,B2,L2);
+  split(B2,B2,C2,R2-L2+1);
+  merch(A1,B2,B2);
+  merch(B2,C1,Ta);
+  merch(A2,B1,B1);
+  merch(B1,C2,Tb);
+}
+int main()
+{
+	int n,m,i,cs=1,val,typ,a,b;
+	while(scanf("%d %d",&n,&m),n+m)
+	{
+  		Ta=Tb=NULL;   
+  		if (cs != 1) printf("\n");
+  		printf("Swapper %d:\n",cs++);
+  		for(i=1;i<=n;i++)
+  		{
+    		scanf("%d",&val);
+    		if(i&1) merch(Ta, new treap(val), Ta);
+    		else merch(Tb, new treap(val), Tb);
+  		}
+  		for(i=0;i<m;i++)
+  		{
+    		scanf("%d %d %d",&typ,&a,&b);
+    		a--;
+			  b--;
+    		if (typ==1) Swap(a,b);
+    		else printf("%lld\n",Sum(a,b));
+  		}
+	}
+}
