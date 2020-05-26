@@ -1,0 +1,43 @@
+//Вообще это наименьшее подмножество рёбер графа, при котором из одной из его вершин можно попасть в любую другую, двигаясь по этим рёбрам.
+//Плюсовый подход пришлось применить. Вектор и массив пар пар.
+//Вообще я думал, что без объединения можно обойтись - не получилось... Хотя оно с b не связано никак...
+#include<iostream>
+#include <stdio.h>
+#include<algorithm>
+#include<vector>
+using namespace std;
+vector<int> a;
+int find(int x){return(x==a[x])?x:a[x]=find(a[x]);}
+void unit(int x, int y)
+{
+    x=find(x);
+    y=find(y);
+    if(x==y) return;
+    a[x]=y;
+}
+int main()
+{
+    long long n,m,i,j,k,s=0,w,ans=0;
+    cin>>n>>m;
+    a.resize(n+1);
+    for(i=1;i<=n;i++) a[i]=i;
+    pair<int,pair<int,int> >b[m];
+    for(k=0;k<m;k++)
+        {
+        cin>>i>>j>>w;
+        b[k]=make_pair(w,make_pair(i,j));
+        }
+    sort(b,b+m);
+    for(k=0;k<m&&s<n-1;k++)
+        {
+        i=find(b[k].second.first);
+        j=find(b[k].second.second);
+        if(i!=j)
+            {	
+            ans+=b[k].first;
+            s++;
+            unit(i,j);
+            }
+        }
+    cout<<ans;
+}
