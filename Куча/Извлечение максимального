@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+using namespace std;
+const int N = 1e5+3;
+struct Heap
+{
+private:
+    int _size;
+    int val[N];
+public:
+    Heap() {_size=0;}
+    void add(int x)
+	{
+        val[_size] = x;
+        sift_up(_size);
+        _size++;
+    }
+    int sift_up(int pos)
+	{
+        int p=(pos-1)/2;
+        if (val[p]<val[pos])
+		{
+            swap(val[p],val[pos]);
+            return sift_up(p);
+        }
+        return pos;
+    }
+    int sift_down(int pos)
+	{
+        int ch1=2*pos+1;
+        int ch2=2*pos+2;
+        if (ch1<_size)
+		{
+            if (ch2<_size)
+			{
+                if (val[ch1]>val[pos]&&val[ch1]>=val[ch2])
+				{
+                    swap(val[ch1],val[pos]);
+                    return sift_down(ch1);
+                }
+                else if (val[ch2]>val[pos]&&val[ch2]>=val[ch1])
+				{
+                    swap(val[ch2],val[pos]);
+                    return sift_down(ch2);
+                }
+            }
+            else if (val[ch1]>val[pos])
+			{
+                swap(val[ch1],val[pos]);
+                return sift_down(ch1);
+            }
+        }
+        return pos;
+    }
+    int get_max() {return val[0];}
+    int extract_max()
+	{
+        val[0]=val[_size-1];
+        _size--;
+        return sift_down(0);
+    }
+};
+Heap heap;
+int n,i,x,index,res;
+int main()
+{
+    cin >> n;
+    for (i=0;i<n;i++) {cin>>x; heap.add(x);}
+    for (i=0;i<n-1;i++)
+	{
+        res=heap.get_max();
+        index=heap.extract_max();
+        cout<<index+1<<' '<<res<<endl;
+    }
+}
